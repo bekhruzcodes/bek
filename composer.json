@@ -1,0 +1,20 @@
+{
+    "name": "bekhruz/bek",
+    "description": "A simple version control system",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Bekhruz\\Bek\\": "src/"
+        }
+    },
+    "bin": ["bin/bek"],
+    "authors": [
+        {
+            "name": "bekhruzcodes",
+            "email": "bekhruzbekmirzaliev744@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

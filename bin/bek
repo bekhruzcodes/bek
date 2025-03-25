@@ -1,0 +1,40 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Bekhruz\Bek\VersionControl;
+
+// Check if any command is passed
+if ($argc < 2) {
+    echo "Usage: bek <command> [options]\n";
+    exit(1);
+}
+
+// Get command and optional arguments
+$command = $argv[1];
+$options = array_slice($argv, 2);
+
+try {
+    $vc = new VersionControl();
+
+    switch ($command) {
+        case 'init':
+            echo $vc->init() . "\n";
+            break;
+        case 'commit':
+            if (empty($options)) {
+                echo "Usage: bek commit <filename>\n";
+                exit(1);
+            }
+            echo $vc->commit($options[0]) . "\n";
+            break;
+        default:
+            echo "Unknown command: $command\n";
+            echo "Available commands: init, commit <filename>\n";
+            exit(1);
+    }
+} catch (Exception $e) {
+    echo $e->getMessage() . "\n";
+    exit(1);
+}
