@@ -9,6 +9,11 @@
         }
     },
     "bin": ["bin/bek"],
+    "scripts": {
+        "post-install-cmd": [
+            "chmod +x bin/bek"
+        ]
+    },
     "authors": [
         {
             "name": "bekhruzcodes",
