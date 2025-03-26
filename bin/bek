@@ -29,9 +29,19 @@ try {
             }
             echo $vc->commit($options[0]) . "\n";
             break;
+        case 'log':
+            echo "Commit History:\n" . $vc->log() . "\n";
+            break;
+        case 'revert':
+            if (count($options) < 2) {
+                echo "Usage: bek revert <commit_id> <filename>\n";
+                exit(1);
+            }
+            echo $vc->revert($options[0], $options[1]) . "\n";
+            break;
         default:
             echo "Unknown command: $command\n";
-            echo "Available commands: init, commit <filename>\n";
+            echo "Available commands: init, commit <filename>, log, revert <commit_id> <filename>\n";
             exit(1);
     }
 } catch (Exception $e) {
