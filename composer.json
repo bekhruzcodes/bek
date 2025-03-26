@@ -1,6 +1,6 @@
 {
     "name": "bekhruz/bek",
-    "description": "A simple version control system",
+    "description": "Bek is a lightweight version control system for managing text file changes in PHP projects. Designed for simplicity, it provides basic commit, history, and revert functionality within a Composer-based environment.",
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -11,12 +11,11 @@
     "bin": ["bin/bek"],
     "scripts": {
         "post-install-cmd": [
-            "chmod +x bin/bek",
-            "php -r \"file_put_contents(getenv('HOME') . '/.bashrc', PHP_EOL . 'export PATH=\"' . getcwd() . '/vendor/bin:$PATH\"' . PHP_EOL, FILE_APPEND);\"",
-            "php -r \"file_put_contents(getenv('HOME') . '/.zshrc', PHP_EOL . 'export PATH=\"' . getcwd() . '/vendor/bin:$PATH\"' . PHP_EOL, FILE_APPEND);\""
+            "sh -c 'chmod +x bin/bek'",
+            "php -r \"echo 'To use Bek globally, run: sudo ln -s $(pwd)/bin/bek /usr/local/bin/bek' . PHP_EOL;\""
         ],
         "post-update-cmd": [
-            "chmod +x bin/bek"
+            "sh -c 'chmod +x bin/bek'"
         ]
     },
     "authors": [
