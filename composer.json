@@ -3,31 +3,50 @@
     "description": "A simple version control system",
     "type": "library",
     "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Bekhruz\\Bek\\": "src/"
-        }
-    },
-    "bin": ["bin/bek"],
-    "scripts": {
-        "post-install-cmd": [
-            "chmod +x bin/bek",
-            "php -r \"file_put_contents(getenv('HOME') . '/.bashrc', PHP_EOL . 'export PATH=\"' . getcwd() . '/vendor/bin:$PATH\"' . PHP_EOL, FILE_APPEND);\"",
-            "php -r \"file_put_contents(getenv('HOME') . '/.zshrc', PHP_EOL . 'export PATH=\"' . getcwd() . '/vendor/bin:$PATH\"' . PHP_EOL, FILE_APPEND);\""
-        ],
-        "post-update-cmd": [
-            "chmod +x bin/bek"
-        ]
-    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    
     "authors": [
         {
             "name": "bekhruzcodes",
             "email": "bekhruzbekmirzaliev744@gmail.com"
         }
     ],
+    
     "require": {
-        "php": "^7.4 || ^8.0"
+        "php": "^7.4 || ^8.0",
+        "composer-plugin-api": "^2.0"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    
+    "require-dev": {
+        "composer/composer": "^2.0"
+    },
+    
+    "autoload": {
+        "psr-4": {
+            "Bekhruz\\Bek\\": "src/",
+            "Bekhruz\\Bek\\Composer\\": "src/Composer/"
+        }
+    },
+    
+    "bin": ["bin/bek", "bin/bek.php"],
+    
+    "extra": {
+        "class": "Bekhruz\\Bek\\Composer\\BekInstaller"
+    },
+    
+    "scripts": {
+        "post-install-cmd": [
+            "chmod +x bin/bek",
+            "php install.php",
+            "php vendor/bekhruz/bek/install.php"
+        ],
+        "post-update-cmd": [
+            "chmod +x bin/bek"
+        ]
+    },
+    
+    "config": {
+        "allow-plugins": true
+    }
 }

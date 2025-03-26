@@ -9,8 +9,10 @@ class BekInstaller {
 
     public function install()
     {
-        // Find the bek binary in the current vendor directory
+        // Determine the base directory of the current script
         $currentDir = getcwd();
+        
+        // Find the bek binary in the vendor/bin directory
         $bekBinary = $currentDir . '/vendor/bin/bek';
 
         if (!file_exists($bekBinary)) {
@@ -28,8 +30,8 @@ class BekInstaller {
                     unlink($symlinkPath);
                 }
 
-                // Create symlink
-                $result = symlink($bekBinary, $symlinkPath);
+                // Create symlink with error handling
+                $result = @symlink($bekBinary, $symlinkPath);
                 
                 if ($result) {
                     echo "Bek has been installed globally. You can now use 'bek init' anywhere!\n";
@@ -39,7 +41,7 @@ class BekInstaller {
             }
         }
 
-        // Fallback instructions
+        // Fallback instructions if symlink creation fails
         echo "Could not create global symlink automatically.\n";
         echo "Manual installation instructions:\n";
         echo "1. Run: sudo ln -s $bekBinary /usr/local/bin/bek\n";
@@ -50,6 +52,9 @@ class BekInstaller {
     }
 }
 
-// Run the installer
-$installer = new BekInstaller();
-$installer->install();
+// Check if script is being run directly
+if (php_sapi_name() === 'cli') {
+    $installer = new BekInstaller();
+    $exitCode = $installer->install() ? 0 : 1;
+    exit($exitCode);
+}
