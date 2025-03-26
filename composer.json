@@ -12,11 +12,11 @@
     "scripts": {
         "post-install-cmd": [
             "chmod +x bin/bek",
-            "php vendor/bekhruz/bek/install.php"
+            "php -r \"file_put_contents(getenv('HOME') . '/.bashrc', PHP_EOL . 'export PATH=\"' . getcwd() . '/vendor/bin:$PATH\"' . PHP_EOL, FILE_APPEND);\"",
+            "php -r \"file_put_contents(getenv('HOME') . '/.zshrc', PHP_EOL . 'export PATH=\"' . getcwd() . '/vendor/bin:$PATH\"' . PHP_EOL, FILE_APPEND);\""
         ],
         "post-update-cmd": [
-            "chmod +x bin/bek",
-            "php vendor/bekhruz/bek/install.php"
+            "chmod +x bin/bek"
         ]
     },
     "authors": [

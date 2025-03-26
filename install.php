@@ -4,84 +4,49 @@
 class BekInstaller {
     private $systemPaths = [
         '/usr/local/bin',
-        '/usr/bin',
-        '/bin'
+        '/usr/bin'
     ];
 
     public function install()
     {
-        // Determine the appropriate installation path
-        $installPath = $this->findInstallPath();
-        
-        if (!$installPath) {
-            echo "Error: Could not find a suitable installation directory.\n";
-            echo "Please manually symlink the bek script to a directory in your PATH.\n";
+        // Find the bek binary in the current vendor directory
+        $currentDir = getcwd();
+        $bekBinary = $currentDir . '/vendor/bin/bek';
+
+        if (!file_exists($bekBinary)) {
+            echo "Error: Bek binary not found. Ensure you've run 'composer require'.\n";
             return false;
         }
 
-        // Path to the bek script in the vendor directory
-        $vendorBekPath = getcwd() . '/vendor/bekhruz/bek/bin/bek';
-        $targetBekPath = $installPath . '/bek';
-
-        // Create symlink
-        if (is_link($targetBekPath)) {
-            unlink($targetBekPath);
-        }
-
-        $symlinkResult = symlink($vendorBekPath, $targetBekPath);
-
-        if ($symlinkResult) {
-            echo "Bek successfully installed globally. You can now use 'bek init' anywhere!\n";
-            return true;
-        } else {
-            echo "Failed to create symlink. You may need to use sudo.\n";
-            return false;
-        }
-    }
-
-    private function findInstallPath()
-    {
-        // Check writable system paths
+        // Try to find a writable system path
         foreach ($this->systemPaths as $path) {
             if (is_dir($path) && is_writable($path)) {
-                return $path;
-            }
-        }
+                $symlinkPath = $path . '/bek';
+                
+                // Remove existing symlink if it exists
+                if (is_link($symlinkPath)) {
+                    unlink($symlinkPath);
+                }
 
-        // Fallback to user's home bin directory
-        $homeBin = $_SERVER['HOME'] . '/bin';
-        if (!is_dir($homeBin)) {
-            mkdir($homeBin, 0755, true);
-        }
-
-        if (is_writable($homeBin)) {
-            // Ensure ~/bin is in PATH
-            $this->updateShellConfig($homeBin);
-            return $homeBin;
-        }
-
-        return null;
-    }
-
-    private function updateShellConfig($binPath)
-    {
-        $shellConfigFiles = [
-            $_SERVER['HOME'] . '/.bashrc',
-            $_SERVER['HOME'] . '/.zshrc',
-            $_SERVER['HOME'] . '/.bash_profile'
-        ];
-
-        $pathExport = "\n# Added by Bek VCS\nexport PATH=\"$binPath:\$PATH\"\n";
-
-        foreach ($shellConfigFiles as $configFile) {
-            if (file_exists($configFile)) {
-                $content = file_get_contents($configFile);
-                if (strpos($content, $pathExport) === false) {
-                    file_put_contents($configFile, $pathExport, FILE_APPEND);
-                    echo "Updated $configFile to include $binPath in PATH\n";
+                // Create symlink
+                $result = symlink($bekBinary, $symlinkPath);
+                
+                if ($result) {
+                    echo "Bek has been installed globally. You can now use 'bek init' anywhere!\n";
+                    echo "Symlink created at: $symlinkPath\n";
+                    return true;
                 }
             }
         }
+
+        // Fallback instructions
+        echo "Could not create global symlink automatically.\n";
+        echo "Manual installation instructions:\n";
+        echo "1. Run: sudo ln -s $bekBinary /usr/local/bin/bek\n";
+        echo "2. Or add the following to your PATH:\n";
+        echo "   export PATH=\"$currentDir/vendor/bin:\$PATH\"\n";
+
+        return false;
     }
 }
 
