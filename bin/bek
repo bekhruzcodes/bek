@@ -1,7 +1,27 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+// Try multiple autoload paths
+$autoloadPaths = [
+    __DIR__ . '/../vendor/autoload.php',           // When used as a dependency
+    __DIR__ . '/../../autoload.php',               // Nested vendor directory
+    __DIR__ . '/../../../autoload.php',            // Even deeper nesting
+    getcwd() . '/vendor/autoload.php'              // Current working directory
+];
+
+$autoloadFound = false;
+foreach ($autoloadPaths as $path) {
+    if (file_exists($path)) {
+        require $path;
+        $autoloadFound = true;
+        break;
+    }
+}
+
+if (!$autoloadFound) {
+    echo "Error: Autoload file not found. Make sure you've run composer install.\n";
+    exit(1);
+}
 
 use Bekhruz\Bek\VersionControl;
 
@@ -16,7 +36,8 @@ $command = $argv[1];
 $options = array_slice($argv, 2);
 
 try {
-    $vc = new VersionControl();
+    // Use current working directory as the repository path
+    $vc = new VersionControl(getcwd());
 
     switch ($command) {
         case 'init':

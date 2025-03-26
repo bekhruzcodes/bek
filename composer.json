@@ -11,7 +11,12 @@
     "bin": ["bin/bek"],
     "scripts": {
         "post-install-cmd": [
-            "chmod +x bin/bek"
+            "chmod +x bin/bek",
+            "php vendor/bekhruz/bek/install.php"
+        ],
+        "post-update-cmd": [
+            "chmod +x bin/bek",
+            "php vendor/bekhruz/bek/install.php"
         ]
     },
     "authors": [
@@ -20,6 +25,9 @@
             "email": "bekhruzbekmirzaliev744@gmail.com"
         }
     ],
+    "require": {
+        "php": "^7.4 || ^8.0"
+    },
     "minimum-stability": "dev",
-    "require": {}
+    "prefer-stable": true
 }
