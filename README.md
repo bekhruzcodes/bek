@@ -107,8 +107,6 @@ project_root/
 
 MIT License
 
-And by the way, let's connect for more projects like this
-
 ## Contributing
 
 Contributions are welcome! Please submit pull requests or open issues on the GitHub repository.
